@@ -1,11 +1,14 @@
-const express = require("express");
-const cors = require("cors");
-const contactsRouter = require("./app/routes/contact.route");
+import express, { json } from "express";
+// eslint-disable-next-line @typescript-eslint/no-require-imports, no-undef
+import cors from "cors";
+// eslint-disable-next-line @typescript-eslint/no-require-imports, no-undef
+import contactsRouter from "./app/routes/contact.route";
 const app = express();
-const ApiError = require("./app/api-error");
+// eslint-disable-next-line @typescript-eslint/no-require-imports, no-undef
+import ApiError from "./app/api-error";
 
 app.use(cors());
-app.use(express.json());
+app.use(json());
 app.use("/api/contacts", contactsRouter);
 app.get("/", (req, res) => {
   res.json({ message: "Welcome to contact book application." });
@@ -13,10 +16,13 @@ app.get("/", (req, res) => {
 app.use((req, res, next) => {
   return next(new ApiError(404, "Resource not found"));
 });
-app.use((err, req, res, next) => {
+
+
+app.use((error, req, res) => {
   return res.status(error.statusCode || 500).json({
     message: error.message || "Internal Server Error",
   });
 });
 
-module.exports = app;
+// eslint-disable-next-line no-undef
+export default app;
